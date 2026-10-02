@@ -1,0 +1,33 @@
+{
+  "name": "@nuxt-multi-app-starter/example-site-scaffolding",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "lint": "nuxt prepare && eslint .",
+    "typecheck": "nuxt typecheck",
+    "smoke": "node --experimental-strip-types ../../scripts/smoke.mts"
+  },
+  "dependencies": {
+    "@nuxt-multi-app-starter/site-core": "workspace:*",
+    "nuxt": "4.4.5"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "1.15.2",
+    "@nuxtjs/robots": "6.0.8",
+    "@nuxtjs/sitemap": "8.0.15",
+    "@tailwindcss/typography": "0.5.19",
+    "@tailwindcss/vite": "4.3.0",
+    "eslint": "9.39.4",
+    "playwright": "1.60.0",
+    "tailwindcss": "4.3.0",
+    "typescript": "5.9.3",
+    "vue-tsc": "3.1.7",
+    "zod": "4.4.3"
+  },
+  "license": "MIT"
+}

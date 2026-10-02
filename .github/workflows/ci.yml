@@ -1,0 +1,173 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    outputs:
+      app_matrix: ${{ steps.plan.outputs.app_matrix }}
+      app_count: ${{ steps.plan.outputs.app_count }}
+      has_code_change: ${{ steps.plan.outputs.has_code_change }}
+      needs_scaffold: ${{ steps.plan.outputs.needs_scaffold }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - id: plan
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          node --experimental-strip-types scripts/ci-plan.mts --base "$BASE_SHA" --head "$HEAD_SHA" > ci-plan.json
+          node - <<'EOF' >> "$GITHUB_OUTPUT"
+          const fs = require('fs')
+          const plan = JSON.parse(fs.readFileSync('ci-plan.json', 'utf8'))
+
+          console.log(`app_matrix=${JSON.stringify(plan.apps)}`)
+          console.log(`app_count=${plan.apps.length}`)
+          console.log(`has_code_change=${plan.hasCodeChange}`)
+          console.log(`needs_scaffold=${plan.needsScaffold}`)
+          EOF
+
+  verify:
+    needs:
+      - discover
+    if: ${{ needs.discover.outputs.has_code_change == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.1.1
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm typecheck:scripts
+      - run: pnpm test:ci-plan
+
+  verify-scaffold:
+    needs:
+      - discover
+      - verify
+    if: ${{ needs.discover.outputs.has_code_change == 'true' && needs.discover.outputs.needs_scaffold == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.1.1
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: rm -rf apps/ci-scaffold-check
+      - run: pnpm new:web-app ci-scaffold-check --content
+      - run: |
+          node - <<'EOF'
+          const fs = require('fs')
+
+          const packageJson = JSON.parse(fs.readFileSync('apps/ci-scaffold-check/package.json', 'utf8'))
+          const manifest = fs.readFileSync('apps/ci-scaffold-check/site.manifest.ts', 'utf8')
+          const readme = fs.readFileSync('apps/ci-scaffold-check/README.md', 'utf8')
+
+          if (packageJson.scripts.lint !== 'nuxt prepare && eslint .') {
+            throw new Error(`Unexpected scaffold lint script: ${packageJson.scripts.lint}`)
+          }
+
+          if (!manifest.includes("outputDirectory: 'apps/ci-scaffold-check/dist'") && !manifest.includes('outputDirectory: "apps/ci-scaffold-check/dist"')) {
+            throw new Error('Scaffold manifest output directory does not point at apps/ci-scaffold-check/dist')
+          }
+
+          if (!readme.includes('Output directory: `apps/ci-scaffold-check/dist`')) {
+            throw new Error('Scaffold README output directory is stale')
+          }
+          EOF
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm app:lint ci-scaffold-check
+      - run: pnpm app:typecheck ci-scaffold-check
+      - run: pnpm app:generate ci-scaffold-check
+        env:
+          NITRO_PRESET: cloudflare-pages-static
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm app:smoke ci-scaffold-check
+      - if: always()
+        run: rm -rf apps/ci-scaffold-check
+
+  verify-apps:
+    needs:
+      - discover
+      - verify
+    if: ${{ needs.discover.outputs.app_count != '0' && needs.discover.outputs.has_code_change == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON(needs.discover.outputs.app_matrix) }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.1.1
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - if: ${{ matrix.app.smoke }}
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+      - id: build_app
+        run: ${{ matrix.app.buildCommand }}
+        working-directory: ${{ matrix.app.rootDirectory }}
+        env:
+          NITRO_PRESET: cloudflare-pages-static
+      - if: ${{ matrix.app.smoke }}
+        run: pnpm exec playwright install --with-deps chromium
+      - if: ${{ matrix.app.smoke }}
+        run: pnpm app:smoke ${{ matrix.app.slug }}

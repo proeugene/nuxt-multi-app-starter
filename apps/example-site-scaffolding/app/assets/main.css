@@ -1,0 +1,50 @@
+@reference "@nuxt-multi-app-starter/site-core/assets/theme.css";
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    @apply text-slate-950 antialiased;
+    background:
+      radial-gradient(circle at top left, rgba(52, 211, 153, 0.24), transparent 24rem),
+      radial-gradient(circle at top right, rgba(16, 185, 129, 0.18), transparent 20rem),
+      linear-gradient(180deg, #f7fffb 0%, #ecfdf5 46%, #ffffff 100%);
+  }
+}
+
+@layer components {
+  .app-shell {
+    @apply relative min-h-screen overflow-hidden;
+  }
+
+  .soft-panel {
+    @apply border border-emerald-950/8 bg-white/86 backdrop-blur;
+    border-radius: 1.5rem;
+    box-shadow: 0 24px 80px rgba(15, 23, 42, 0.08);
+  }
+
+  .hero-badge {
+    @apply inline-flex items-center gap-2 rounded-full border border-emerald-700/15 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-emerald-900;
+  }
+
+  .code-panel {
+    @apply border border-slate-950/8 bg-slate-950 text-slate-50;
+    border-radius: 1.5rem;
+    box-shadow: 0 24px 80px rgba(15, 23, 42, 0.16);
+  }
+
+  .command-pill {
+    @apply rounded-2xl border border-white/10 bg-white/5 px-4 py-3 font-mono text-sm text-emerald-200;
+  }
+}
+
+::selection {
+  background: rgba(16, 185, 129, 0.2);
+  color: #0f172a;
+}
+
+a {
+  @apply transition-colors duration-200;
+}

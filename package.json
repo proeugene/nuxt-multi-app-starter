@@ -1,0 +1,58 @@
+{
+  "name": "nuxt-multi-app-starter",
+  "version": "2.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.1.1",
+  "scripts": {
+    "app:dev": "node --experimental-strip-types scripts/app-command.mts dev",
+    "app:build": "node --experimental-strip-types scripts/app-command.mts build",
+    "app:generate": "node --experimental-strip-types scripts/app-command.mts generate",
+    "app:preview": "node --experimental-strip-types scripts/app-command.mts preview",
+    "app:lint": "node --experimental-strip-types scripts/app-command.mts lint",
+    "app:typecheck": "node --experimental-strip-types scripts/app-command.mts typecheck",
+    "app:smoke": "node --experimental-strip-types scripts/app-command.mts smoke",
+    "ci:plan": "node --experimental-strip-types scripts/ci-plan.mts",
+    "new:web-app": "node --experimental-strip-types scripts/create-web-app.mts",
+    "dev": "pnpm app:dev example-site-scaffolding",
+    "build": "pnpm app:build example-site-scaffolding",
+    "generate": "pnpm app:generate example-site-scaffolding",
+    "preview": "pnpm app:preview example-site-scaffolding",
+    "lint": "pnpm -r --if-present lint",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "typecheck:scripts": "tsc -p tsconfig.json",
+    "smoke": "pnpm app:smoke example-site-scaffolding",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test:ci-plan": "node --experimental-strip-types --test scripts/ci-plan.test.mts"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "1.15.2",
+    "@nuxtjs/robots": "6.0.8",
+    "@nuxtjs/sitemap": "8.0.15",
+    "@tailwindcss/typography": "0.5.19",
+    "@tailwindcss/vite": "4.3.0",
+    "@types/node": "24.10.1",
+    "eslint": "9.39.4",
+    "nuxt-site-config": "4.0.8",
+    "playwright": "1.60.0",
+    "prettier": "3.7.4",
+    "tailwindcss": "4.3.0",
+    "typescript": "5.9.3",
+    "vue-tsc": "3.1.7",
+    "zod": "4.4.3"
+  },
+  "description": "Multiple independent Nuxt sites with one shared technical foundation.",
+  "license": "MIT",
+  "author": "Eugene Prokudin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/proeugene/nuxt-multi-app-starter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/proeugene/nuxt-multi-app-starter/issues"
+  },
+  "homepage": "https://github.com/proeugene/nuxt-multi-app-starter#readme",
+  "engines": {
+    "node": "24.x"
+  }
+}
