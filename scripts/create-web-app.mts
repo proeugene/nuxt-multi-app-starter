@@ -135,26 +135,26 @@ export default siteManifest
 const normalizedPackageJsonTemplate = () => {
   const dependencies: Record<string, string> = {
     '@nuxt-multi-app-starter/site-core': 'workspace:*',
-    nuxt: '4.4.5',
+    nuxt: '4.5.2',
   }
 
   const devDependencies: Record<string, string> = {
-    '@nuxt/eslint': '1.15.2',
-    '@nuxtjs/robots': '6.0.8',
-    '@nuxtjs/sitemap': '8.0.15',
-    '@tailwindcss/typography': '0.5.19',
-    '@tailwindcss/vite': '4.3.0',
-    eslint: '9.39.4',
-    playwright: '1.60.0',
-    tailwindcss: '4.3.0',
-    typescript: '5.9.3',
-    'vue-tsc': '3.1.7',
+    '@nuxt/eslint': '1.17.0',
+    '@nuxtjs/robots': '6.2.4',
+    '@nuxtjs/sitemap': '8.6.1',
+    '@tailwindcss/typography': '0.5.20',
+    '@tailwindcss/vite': '4.3.3',
+    eslint: '10.11.0',
+    playwright: '1.63.0',
+    tailwindcss: '4.3.3',
+    typescript: '6.0.3',
+    'vue-tsc': '3.3.12',
   }
 
   if (withContent) {
-    dependencies['@nuxt/content'] = '3.13.0'
-    dependencies['better-sqlite3'] = '12.10.0'
-    devDependencies.zod = '4.4.3'
+    dependencies['@nuxt/content'] = '3.16.1'
+    dependencies['better-sqlite3'] = '13.0.3'
+    devDependencies.zod = '4.6.5'
   }
 
   return `${JSON.stringify(

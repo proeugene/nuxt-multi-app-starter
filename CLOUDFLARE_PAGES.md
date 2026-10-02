@@ -9,8 +9,8 @@ root at the repository root and use each app's manifest-backed command.
 - Root directory: repository root.
 - Build command: `pnpm app:generate example-site-scaffolding`.
 - Output directory: `apps/example-site-scaffolding/dist`.
-- Node.js version: 24.
-- pnpm version: 11.1.1, as pinned by the root package metadata.
+- Node.js version: 24.11 or newer (within Node 24).
+- pnpm version: 12.8.1, as pinned by the root package metadata.
 - Nitro preset: `cloudflare-pages-static` (CI sets `NITRO_PRESET` explicitly).
 
 For a new app, replace the slug and output directory with values from its

@@ -1,15 +1,16 @@
 # Nuxt Multi-App Starter
 
-Build separate Nuxt websites without repeating the same setup for every site.
+Run several independent Nuxt websites from one repository.
 
-A pnpm workspace using Nuxt 4 Layers, Tailwind CSS v4, typed site manifests,
-app scaffolding, affected-app build/smoke CI and Cloudflare Pages deployment
-conventions. Sites share platform defaults while owning their routes, content,
-assets and design.
+Share common setup and code while keeping each site's pages, content and design
+separate. Includes an example site, a generator for adding new sites, and automated
+checks.
+
+Built with Nuxt 4, Nuxt Layers, pnpm and Tailwind CSS.
 
 ## Quick start
 
-Requires **Node.js 24** (see `.nvmrc`) and **pnpm 11.1.1** (pinned in `package.json`).
+Requires **Node.js 24.11+** (see `.nvmrc`) and **pnpm 12.8.1** (pinned in `package.json`).
 Run commands from the workspace root.
 
 ```bash
@@ -155,6 +156,22 @@ See [CLOUDFLARE_PAGES.md](CLOUDFLARE_PAGES.md) for one independently configured
 Pages project per app, build watch paths and app-specific environment settings.
 The manifests document deployment settings; they do not create cloud resources
 or isolate runtime secrets automatically.
+
+## Contributing
+
+Bug reports, suggestions and pull requests are welcome.
+
+For bugs, [open an issue](https://github.com/proeugene/nuxt-multi-app-starter/issues)
+and include steps to reproduce and your Node.js and pnpm versions. For larger
+changes, open an issue first so we can discuss the approach.
+
+To contribute code, fork the repo, create a branch and open a pull request. Run the
+[validation commands above](#commands-and-validation) for any apps you change.
+For shared code changes, validate all apps. Documentation-only changes do not
+need app builds or smoke checks.
+
+Useful contributions include clearer documentation, generator improvements and
+fixes to the shared setup.
 
 ## License
 
