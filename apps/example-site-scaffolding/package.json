@@ -26,7 +26,7 @@
     "playwright": "1.60.0",
     "tailwindcss": "4.3.0",
     "typescript": "5.9.3",
-    "vue-tsc": "3.1.7",
+    "vue-tsc": "3.3.11",
     "zod": "4.4.3"
   },
   "license": "MIT"
