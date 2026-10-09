@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@nuxt-multi-app-starter/site-core": "workspace:*",
-    "nuxt": "4.5.2"
+    "nuxt": "4.6.0"
   },
   "devDependencies": {
     "@nuxt/eslint": "1.17.0",
