@@ -33,7 +33,7 @@
     "@tailwindcss/vite": "4.3.3",
     "@types/node": "24.19.1",
     "eslint": "10.11.0",
-    "nuxt-site-config": "4.2.3",
+    "nuxt-site-config": "5.0.3",
     "playwright": "1.63.0",
     "prettier": "3.9.9",
     "tailwindcss": "4.3.3",
